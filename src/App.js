@@ -58,6 +58,21 @@ class App extends Component {
         })
 
     };
+
+    logar=(user)=>{
+        fetch('http://localhost:3000/users',{
+
+            method:'POST',
+            headers:{'Content-Type': 'application/json'},
+            body: JSON.stringify({user})
+        }).then(response =>{
+            console.log('sucesso')
+        }).catch(error => {
+            console.log(error)
+        })
+
+    }
+
     scrollToBottom = () => {
         this.messagesEnd.scrollIntoView({ behavior: "smooth" });
     }
@@ -77,7 +92,7 @@ class App extends Component {
               <br/>
           </div>
 
-          {this.state.isLogado && <LoginChat/>}
+          {!this.state.isLogado && <LoginChat logar={this.logar}/>}
             <Mensagens messages={this.state.messages}/>
             <br/>
            <SendMessage user={this.state.user} sendMessage={this.sendMessage} />
