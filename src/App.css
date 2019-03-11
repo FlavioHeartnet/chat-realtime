@@ -23,6 +23,16 @@
   color: #61dafb;
 }
 
+.bubbleChat{
+  width: 50%;
+}
+
+.textoHoraEstilo{
+  text-align: right;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
