@@ -4,41 +4,22 @@ import LoginChat from './LoginChat'
 import SendMessage from './SendMessage'
 import {Segment} from "semantic-ui-react";
 import Mensagens from './Mensagens'
+import User from './User'
+
 
 class App extends Component {
 
-
-
     state = {
         user: '',
+        text:'',
         isLogado: false,
         messagesEnd:'',
         messages:[
-            {
-                texto: 'Lorem ipsum motadet',
-                isMine:false,
-                user:'Teste',
-                hora: '15:30'
-            },
-            {
-                texto: 'Lorem ipsum motadet Lorem ipsum motadet',
-                isMine:true,
-                user:'Teste1',
-                hora: '15:31'
-            },
-            {
-                texto: 'Lorem ipsum motadet Lorem ipsum motadet Lorem ipsum motadet',
-                isMine:false,
-                user:'Teste',
-                hora: '15:32'
-            },
-            {
-                texto: 'Lorem ipsum motadet Lorem ipsum motadet Lorem ipsum motadet',
-                isMine:true,
-                user:'Teste',
-                hora: '15:35'
-            },
-        ]
+
+        ],
+        usuario:{},
+        isAuthError:false,
+        AuthError:'',
     };
 
     formataHora = ()=>{
@@ -46,30 +27,46 @@ class App extends Component {
         return (date.getHours() < 10 ? "0"+date.getHours(): date.getHours()) + ":"+ (date.getMinutes() < 10 ? "0"+ date.getMinutes() : date.getMinutes())
     }
 
-    sendMessage = (texto,user) =>{
+    sendMessage = (texto) =>{
 
-        this.setState({
-            messages:[...this.state.messages, {
-                texto: texto,
-                isMine:true,
-                user: user,
-                hora: this.formataHora()
-            }]
-        })
+
+        const id = this.props.database.ref().child('mensagens').push().key;
+        const mensagens ={};
+        var date = new Date();
+        mensagens['mensagens/'+id]=
+            {
+                'texto':texto,
+                'email': this.state.user.email,
+                'UserId': this.state.user.uid,
+                'hora': this.formataHora(),
+                'data':date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear()
+            };
+        console.log(mensagens);
+        this.props.database.ref().update(mensagens);
 
     };
 
-    logar=(user)=>{
-        fetch('http://localhost:3000/users',{
+    logar= async (email, senha)=>{
 
-            method:'POST',
-            headers:{'Content-Type': 'application/json'},
-            body: JSON.stringify({user})
-        }).then(response =>{
-            console.log('sucesso')
-        }).catch(error => {
-            console.log(error)
+        this.setState({
+            authError: '',
+            isAuthError:false
         })
+        try{
+            const {auth} = this.props;
+            const user = await auth.signInWithEmailAndPassword(email,senha)
+            console.log(email, senha, user)
+        }catch (e) {
+            this.setState({
+                authError: e.code,
+                isAuthError:true
+            })
+        }
+    }
+
+    logout = () =>{
+        const {auth} = this.props;
+        auth.signOut();
 
     }
 
@@ -78,6 +75,28 @@ class App extends Component {
     }
 
     componentDidMount() {
+
+        this.comments = this.props.database.ref('mensagens');
+        this.comments.on('value', snapshot => {
+            this.setState({
+                messages: snapshot.val()
+            });
+        })
+        this.props.auth.onAuthStateChanged(user =>{
+            if(user)
+            {
+                this.setState({
+                    isLogado:true,
+                    user
+                })
+            }else{
+                this.setState({
+                    isLogado:false,
+                    user:{}
+                })
+            }
+        })
+
         this.scrollToBottom();
     }
 
@@ -91,11 +110,11 @@ class App extends Component {
               <h1 className="header">Chat Dev</h1>
               <br/>
           </div>
-
-          {!this.state.isLogado && <LoginChat logar={this.logar}/>}
-            <Mensagens messages={this.state.messages}/>
+          {this.state.isLogado && <User email={this.state.user.email}  logout={this.logout}/>}
+          {!this.state.isLogado && <LoginChat authError={this.state.authError} isAuthError={this.state.isAuthError} logar={this.logar}/>}
+          {this.state.isLogado && <Mensagens user={this.state.user} messages={this.state.messages}/>}
             <br/>
-           <SendMessage user={this.state.user} sendMessage={this.sendMessage} />
+          {this.state.isLogado &&<SendMessage sendMessage={this.sendMessage} />}
 
           <div style={{ float:"left", clear: "both" }}
                ref={(el) => { this.messagesEnd = el; }}>

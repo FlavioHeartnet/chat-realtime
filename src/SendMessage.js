@@ -8,7 +8,7 @@ class SendMessage extends Component {
     }
 
     sendMessage = ()=> {
-        this.props.sendMessage(this.state.newMessage, this.props.user)
+        this.props.sendMessage(this.state.newMessage)
         this.setState({
             newMessage: ''
         })

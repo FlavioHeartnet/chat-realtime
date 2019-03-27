@@ -2,7 +2,7 @@ const Pusher = require('pusher');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const ChatKit = require('@pusher/chatkit-server');
+
 
 const app = express();
 
@@ -17,30 +17,6 @@ const pusher = new Pusher({
     encrypted: true
 });
 
-const chatkit = new ChatKit.default({
-    instanceLocator:'v1:us1:6c5562d9-218b-4c9d-965b-4c022e54c544',
-    key:'558475b4-2853-466d-8b71-3be333e0fea2:X8L5so0UAgSJy9u5Fc3LKTg8fplwTNJ/8v5BE9K0bv0='
-
-});
-
-app.post('/users', (req,res)=>{
-
-    const{username} =req.body;
-
-    chatkit.createUser({
-        name:username,
-        id:username
-
-    }).then(()=> res.sendStatus(201)).catch(error => {
-        if(error.error_description === 'services/chat/user_already_exists')
-        {
-            res.sendStatus(200)
-        }else{
-            res.status(error.statusCode).json(error)
-        }
-    })
-
-})
 
 app.set('PORT', process.env.PORT || 5000);
 

@@ -1,5 +1,5 @@
 import React ,{Component} from 'react'
-import {Segment, Grid, Icon} from "semantic-ui-react"
+import {Segment, Grid} from "semantic-ui-react"
 
 class Mensagem extends Component {
 
@@ -12,20 +12,20 @@ class Mensagem extends Component {
     //{this.props.mensagem.isMine && <Icon color={''}  name='check' /> }
     render() {
         let isMine = 'left'
-        let colorBubble = ''
-        let user = ''
-        if(this.props.mensagem.isMine)
+        let typeBubble = false
+        let colorBubble = 'grey'
+        let user = this.props.mensagem.email
+        if(this.props.mensagem.UserId === this.props.user.uid)
         {
+            typeBubble=true
             isMine='right'
             colorBubble = 'teal'
-        }else {
-            user= this.props.mensagem.user;
         }
 
         return (
             <Grid.Column floated={isMine} >
-                 <Segment inverted={this.props.mensagem.isMine} color={colorBubble} className="">
-                     {user !== '' && <p><b>{user}</b></p>}
+                 <Segment inverted={typeBubble} color={colorBubble} className="">
+                     {typeBubble !== true && <p><b>{user}</b></p>}
                      {this.props.mensagem.texto}
                      <p style={{width:'100%'}} className="textoHoraEstilo">{this.props.mensagem.hora} </p>
                  </Segment>
