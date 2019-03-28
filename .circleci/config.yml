@@ -40,7 +40,7 @@ jobs:
 
       # run build
       - run: yarn build
-  commands:
+
     deploy:
       description: Deploy to firebase
       parameters:
