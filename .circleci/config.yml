@@ -43,7 +43,7 @@ jobs:
     description: Deploy to firebase
     parameters:
       token:
-        type: 1/XzcQLYk_sDwmNW21_vRSLnpAgsV7fin2qqpCOXofAPPeokZtL_Lf70rVG4Hp4WKX
+        type: "1/XzcQLYk_sDwmNW21_vRSLnpAgsV7fin2qqpCOXofAPPeokZtL_Lf70rVG4Hp4WKX"
         description: Firebase Deploy Token
     steps:
       - run:
