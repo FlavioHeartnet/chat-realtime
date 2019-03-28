@@ -27,9 +27,11 @@ jobs:
             - v1-dependencies-
 
       - run: yarn install
-        - run:
-            name: Setup dependecies
-            command: npm install
+
+      # setup dependecies
+      - run:
+            name: Setup firebase
+            command: npm install firebase-tools
 
       - save_cache:
           paths:
