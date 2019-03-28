@@ -5,6 +5,8 @@ import SendMessage from './SendMessage'
 import {Segment} from "semantic-ui-react";
 import Mensagens from './Mensagens'
 import User from './User'
+import CustomLoader from './Loader'
+
 
 
 class App extends Component {
@@ -13,6 +15,7 @@ class App extends Component {
         user: '',
         text:'',
         isLogado: false,
+        isLoading:false,
         messagesEnd:'',
         messages:[
 
@@ -20,6 +23,8 @@ class App extends Component {
         usuario:{},
         isAuthError:false,
         AuthError:'',
+        isSignUpError:false,
+        signUpError:''
     };
 
     formataHora = ()=>{
@@ -50,7 +55,9 @@ class App extends Component {
 
         this.setState({
             authError: '',
-            isAuthError:false
+            isAuthError:false,
+            isLoading:true
+
         })
         try{
             const {auth} = this.props;
@@ -62,6 +69,27 @@ class App extends Component {
                 isAuthError:true
             })
         }
+        this.setState({ isLoading: false });
+    }
+
+    cadastrar = async (email,senha)=>{
+        this.setState({
+            signUpError: '',
+            isSignUpError:false,
+            isLoading:true
+
+        })
+        try{
+            const {auth} = this.props;
+            const user = await auth.createUserWithEmailAndPassword(email,senha)
+            console.log(email, senha, user)
+        }catch (e) {
+            this.setState({
+                signUpError: e.code,
+                isSignUpError:true
+            })
+        }
+        this.setState({ isLoading: false });
     }
 
     logout = () =>{
@@ -75,11 +103,11 @@ class App extends Component {
     }
 
     componentDidMount() {
-
+        this.setState({ isLoading: true });
         this.comments = this.props.database.ref('mensagens');
         this.comments.on('value', snapshot => {
             this.setState({
-                messages: snapshot.val()
+                messages: snapshot.val(),isLoading:false
             });
         })
         this.props.auth.onAuthStateChanged(user =>{
@@ -95,6 +123,7 @@ class App extends Component {
                     user:{}
                 })
             }
+            this.setState({ isLoading: false });
         })
 
         this.scrollToBottom();
@@ -110,8 +139,9 @@ class App extends Component {
               <h1 className="header">Chat Dev</h1>
               <br/>
           </div>
+          {this.state.isLoading && <CustomLoader/>}
           {this.state.isLogado && <User email={this.state.user.email}  logout={this.logout}/>}
-          {!this.state.isLogado && <LoginChat authError={this.state.authError} isAuthError={this.state.isAuthError} logar={this.logar}/>}
+          {!this.state.isLogado && <LoginChat isSignUpError={this.state.isSignUpError} signUpError={this.signUpError} cadastrar={this.cadastrar} authError={this.state.authError} isAuthError={this.state.isAuthError} logar={this.logar}/>}
           {this.state.isLogado && <Mensagens user={this.state.user} messages={this.state.messages}/>}
             <br/>
           {this.state.isLogado &&<SendMessage sendMessage={this.sendMessage} />}

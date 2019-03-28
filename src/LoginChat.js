@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import {Button, Form} from "semantic-ui-react";
+import {Button, Form, Label} from "semantic-ui-react";
+import SignUp from './SignUp'
 
 class LoginChat extends Component {
 
@@ -20,9 +21,9 @@ class LoginChat extends Component {
             user:''
         })
     }
-    cadastrar =()=>
+    cadastrar =(user,senha)=>
     {
-
+        this.props.cadastrar(user, senha)
     }
     render() {
         const errorMessages={
@@ -41,8 +42,12 @@ class LoginChat extends Component {
                             <label>Senha</label>
                             <input onChange={this.handleChange('senha')} value={this.state.senha} type={'password'} placeholder={'Digite sua senha'}/>
                         </Form.Field>
+                        <SignUp cadastrar={this.cadastrar}/><br/>
                         <Button onClick={this.logar} primary type={'submit'}>Logar</Button>
-                        <Button onClick={this.cadastrar}>Cadastrar</Button>
+                        {
+                            this.props.isAuthError && <Label color={'red'}>{errorMessages[this.props.authError]}</Label>
+                        }
+
                     </Form>
                 </div>
         );
