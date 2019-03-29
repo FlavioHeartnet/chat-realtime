@@ -39,11 +39,6 @@ jobs:
       # run build
       - run: yarn build
 
-  deploy:
-    machine:
-      enabled: true
-    working_directory: ~/circleci-workflows
-    steps:
       - run:
           name: Install Firebase Tools
           command: npm install --prefix=./firebase-deploy firebase-tools
@@ -58,6 +53,6 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - deploy
+
 
 #deploy key firebase 1/XzcQLYk_sDwmNW21_vRSLnpAgsV7fin2qqpCOXofAPPeokZtL_Lf70rVG4Hp4WKX
