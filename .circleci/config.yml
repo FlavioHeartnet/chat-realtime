@@ -44,8 +44,12 @@ jobs:
       enabled: true
     working_directory: ~/circleci-workflows
     steps:
-       firebase-deploy:
-          deploy: 1/XzcQLYk_sDwmNW21_vRSLnpAgsV7fin2qqpCOXofAPPeokZtL_Lf70rVG4Hp4WKX
+      - run:
+          name: Install Firebase Tools
+          command: npm install --prefix=./firebase-deploy firebase-tools
+      - run:
+          name: Deploy to Firebase
+          command: ./firebase-deploy/node_modules/.bin/firebase deploy --token=1/XzcQLYk_sDwmNW21_vRSLnpAgsV7fin2qqpCOXofAPPeokZtL_Lf70rVG4Hp4WKX
 
 orbs:
   firebase-deploy: cloudliner/firebase-deploy@0.0.2
