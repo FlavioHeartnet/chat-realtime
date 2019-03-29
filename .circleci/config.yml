@@ -42,7 +42,7 @@ jobs:
       - run: yarn build
 
   # deploy
-      - firebase-deploy: 1/XzcQLYk_sDwmNW21_vRSLnpAgsV7fin2qqpCOXofAPPeokZtL_Lf70rVG4Hp4WKX
+      firebase-deploy: 1/XzcQLYk_sDwmNW21_vRSLnpAgsV7fin2qqpCOXofAPPeokZtL_Lf70rVG4Hp4WKX
 
 
 
