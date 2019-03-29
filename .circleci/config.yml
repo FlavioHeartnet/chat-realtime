@@ -42,9 +42,14 @@ jobs:
       - run: yarn build
 
   # deploy
+
+
+  deploy:
+    machine:
+      enabled: true
+    working_directory: ~/circleci-workflows
+    steps:
       firebase-deploy:
         deploy: 1/XzcQLYk_sDwmNW21_vRSLnpAgsV7fin2qqpCOXofAPPeokZtL_Lf70rVG4Hp4WKX
-
-
 
 #deploy key firebase 1/XzcQLYk_sDwmNW21_vRSLnpAgsV7fin2qqpCOXofAPPeokZtL_Lf70rVG4Hp4WKX
