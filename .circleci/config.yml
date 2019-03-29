@@ -44,7 +44,7 @@ jobs:
       enabled: true
     working_directory: ~/circleci-workflows
     steps:
-      - firebase-deploy:
+       firebase-deploy:
           deploy: 1/XzcQLYk_sDwmNW21_vRSLnpAgsV7fin2qqpCOXofAPPeokZtL_Lf70rVG4Hp4WKX
 
 orbs:
