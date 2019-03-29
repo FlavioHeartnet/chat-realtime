@@ -3,8 +3,6 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 version: 2.1
-orbs:
-  firebase-deploy: cloudliner/firebase-deploy@0.0.2
 jobs:
   build:
     docker:
@@ -49,7 +47,8 @@ jobs:
       - firebase-deploy:
           deploy: 1/XzcQLYk_sDwmNW21_vRSLnpAgsV7fin2qqpCOXofAPPeokZtL_Lf70rVG4Hp4WKX
 
-
+orbs:
+  firebase-deploy: cloudliner/firebase-deploy@0.0.2
 workflows:
   version: 2.1
   build_and_test:
