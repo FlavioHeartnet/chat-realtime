@@ -43,7 +43,7 @@ jobs:
 
   # deploy
   firebase-deploy:
-    parameters: "$FIREBASE_TOKEN"
+    parameters: "1/XzcQLYk_sDwmNW21_vRSLnpAgsV7fin2qqpCOXofAPPeokZtL_Lf70rVG4Hp4WKX"
 
 
 #deploy key firebase 1/XzcQLYk_sDwmNW21_vRSLnpAgsV7fin2qqpCOXofAPPeokZtL_Lf70rVG4Hp4WKX
