@@ -42,7 +42,7 @@ class LoginChat extends Component {
                             <label>Senha</label>
                             <input onChange={this.handleChange('senha')} value={this.state.senha} type={'password'} placeholder={'Digite sua senha'}/>
                         </Form.Field>
-                        <SignUp cadastrar={this.cadastrar}/><br/>
+                        <SignUp cadastrar={this.cadastrar} isSignUpError={this.props.isSignUpError} signUpError={this.props.signUpError}/><br/>
                         <Button onClick={this.logar} primary type={'submit'}>Logar</Button>
                         {
                             this.props.isAuthError && <Label color={'red'}>{errorMessages[this.props.authError]}</Label>
