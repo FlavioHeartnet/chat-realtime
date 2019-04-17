@@ -94,7 +94,7 @@ class App extends Component {
             this.props.database.ref().child('intentsMsg').on('value', snapshot => {
                 intentMsg = snapshot.val()
                 let intentText = this.state.luisResponse.topScoringIntent.intent;
-                if(this.state.luisResponse.topScoringIntent.score >0.7){
+                if(this.state.luisResponse.topScoringIntent.score < 0.7){
                     intentText = "None"
                 }
                 const arrayMsg = intentMsg[intentText]
