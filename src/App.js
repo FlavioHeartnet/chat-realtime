@@ -6,7 +6,7 @@ import {Segment} from "semantic-ui-react";
 import Mensagens from './Mensagens'
 import User from './User'
 import CustomLoader from './Loader'
-
+import axios from 'axios';
 
 
 class App extends Component {
@@ -24,7 +24,9 @@ class App extends Component {
         isAuthError:false,
         AuthError:'',
         isSignUpError:false,
-        signUpError:''
+        signUpError:'',
+        appKeyLouis: '77661c04-d45d-4268-8350-1674ed2ced2e',
+        luisResponse:{}
     };
 
     formataHora = ()=>{
@@ -35,7 +37,7 @@ class App extends Component {
     sendMessage = (texto) =>{
 
 
-        const id = this.props.database.ref().child('mensagens').push().key;
+        let id = this.props.database.ref().child('mensagens').push().key;
         const mensagens ={};
         var date = new Date();
         mensagens['mensagens/'+id]=
@@ -46,10 +48,59 @@ class App extends Component {
                 'hora': this.formataHora(),
                 'data':date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear()
             };
-        console.log(mensagens);
         this.props.database.ref().update(mensagens);
 
+        axios.get('https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/'+this.state.appKeyLouis+'?verbose=true&timezoneOffset=-360&subscription-key=c1abc57fa2af4e2fbfb57cb9d07bc659&q='+texto)
+            .then(res => {
+                const resp = res.data;
+                this.setState({
+                    luisResponse: resp
+                })
+
+                this.props.database.ref().child('Intents').remove();
+                id = this.props.database.ref().child('Intents').push().key;
+                const Intents ={};
+
+                Intents['Intents/']= this.state.luisResponse.intents;
+                this.props.database.ref().update(Intents);
+
+                console.log(resp);
+
+                this.montaRespostaBotPositiva()
+
+            })
     };
+
+    botSendMessage=(texto)=>{
+
+        let id = this.props.database.ref().child('mensagens').push().key;
+        const mensagens ={};
+        var date = new Date();
+        mensagens['mensagens/'+id]=
+            {
+                'texto':texto,
+                'email': 'Atendente Tati',
+                'UserId': 'botId',
+                'hora': this.formataHora(),
+                'data':date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear()
+            };
+        this.props.database.ref().update(mensagens);
+
+    }
+
+    montaRespostaBotPositiva = () =>{
+
+            let intentMsg = {}
+            this.props.database.ref().child('intentsMsg').on('value', snapshot => {
+                intentMsg = snapshot.val()
+                const arrayMsg = intentMsg[this.state.luisResponse.topScoringIntent.intent]
+                console.log(intentMsg)
+                console.log(arrayMsg[Math.floor(Math.random() * arrayMsg.length)]);
+
+                this.botSendMessage(arrayMsg[Math.floor(Math.random() * arrayMsg.length)])
+            })
+
+    }
 
     logar= async (email, senha)=>{
 
