@@ -93,13 +93,16 @@ class App extends Component {
             let intentMsg = {}
             this.props.database.ref().child('intentsMsg').on('value', snapshot => {
                 intentMsg = snapshot.val()
-                const arrayMsg = intentMsg[this.state.luisResponse.topScoringIntent.intent]
+                let intentText = this.state.luisResponse.topScoringIntent.intent;
+                if(this.state.luisResponse.topScoringIntent.score >0.7){
+                    intentText = "None"
+                }
+                const arrayMsg = intentMsg[intentText]
                 console.log(intentMsg)
                 console.log(arrayMsg[Math.floor(Math.random() * arrayMsg.length)]);
 
                 this.botSendMessage(arrayMsg[Math.floor(Math.random() * arrayMsg.length)])
             })
-
     }
 
     logar= async (email, senha)=>{
