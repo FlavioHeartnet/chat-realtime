@@ -35,8 +35,6 @@ class App extends Component {
     }
 
     sendMessage = (texto) =>{
-
-
         let id = this.props.database.ref().child('mensagens').push().key;
         const mensagens ={};
         var date = new Date();
@@ -55,7 +53,7 @@ class App extends Component {
                 const resp = res.data;
                 this.setState({
                     luisResponse: resp
-                })
+                });
 
                 this.props.database.ref().child('Intents').remove();
                 id = this.props.database.ref().child('Intents').push().key;
